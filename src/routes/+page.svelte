@@ -28,7 +28,9 @@
 				>Download</Button
 			>
 		</div>
-		<div class="flex flex-1 items-center justify-center"><CollageGrid /></div>
+		<div class="flex flex-1 items-center justify-center">
+			<CollageGrid style={selectedLayout} />
+		</div>
 	</div>
 
 	<div class="w-full py-2 md:w-64 md:pl-4 lg:w-96">
@@ -40,11 +42,13 @@
 				tag="h1"
 				customSize="text-sm">LAYOUT</Heading
 			>
-			<div class="grid grid-cols-3 gap-4 pb-4 md:grid-cols-6 lg:grid-cols-10 xl:grid-cols-3 px-6 py-6">
+			<div
+				class="grid grid-cols-3 gap-4 px-6 py-6 pb-4 md:grid-cols-6 lg:grid-cols-10 xl:grid-cols-3"
+			>
 				{#each LAYOUT_STYLES as layout}
 					<label class="hidden" for={layout.value}>{layout.name}</label>
 					<input
-						class="h-20 w-20 cursor-pointer !rounded-none !border-2 !border-black dark:!border-white bg-origin-content bg-contain checked:bg-contain checked:ring-2 checked:ring-black xl:h-16 xl:w-16 2xl:h-24 2xl:w-24"
+						class="h-20 w-20 cursor-pointer !rounded-none !border-2 !border-black bg-contain bg-origin-content checked:bg-contain checked:ring-2 checked:ring-black xl:h-16 xl:w-16 2xl:h-24 2xl:w-24 dark:!border-white"
 						type="radio"
 						id={layout.value}
 						name="layout-style"
