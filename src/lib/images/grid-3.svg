@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="640">
+    <path  d="M95.803 95.803h448.394v448.394H95.803z" stroke="currentColor"
+        stroke-width="32" fill="none" />
+    <path d="M543.256 320H96.744" stroke="currentColor" stroke-width="32" fill="none" />
+    <path transform="matrix(1 0 0 .51933 320 432.099)" d="M0-223.256v446.512" stroke="currentColor" stroke-width="32"
+        fill="none" />
+</svg>

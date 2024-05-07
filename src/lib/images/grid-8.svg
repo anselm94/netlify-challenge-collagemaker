@@ -1,0 +1,17 @@
+<svg width="640" height="640" xmlns="http://www.w3.org/2000/svg">
+   <path  d="M544.197 95.803v448.394H95.803V95.803z" fill="none" stroke="currentColor"
+      stroke-width="32" />
+   <path d="M543.256 430.664H96.744" fill="none" stroke="currentColor" stroke-width="32" />
+   <path d="M0-223.256v446.512" fill="none" stroke="currentColor" stroke-width="32"
+      transform="matrix(-1 0 0 -1.00233 429.885 320)" />
+   <path d="M0-223.256v446.512" fill="none" stroke="currentColor" stroke-width="32"
+      transform="matrix(-1 0 0 -.25332 206.375 487.22)" />
+   <path d="M0-223.256v446.512" fill="none" stroke="currentColor" stroke-width="32"
+      transform="matrix(-1 0 0 -.25332 318.13 487.22)" />
+   <path d="M0-223.256v446.512" fill="none" stroke="currentColor" stroke-width="32"
+      transform="matrix(0 -1 .25332 0 487.64 320)" />
+   <path d="M0-223.256v446.512" fill="none" stroke="currentColor" stroke-width="32"
+      transform="matrix(0 -1 .25332 0 487.64 209.336)" />
+   <path d="M0-223.256v446.512" fill="none" stroke="currentColor" stroke-width="32"
+      transform="matrix(0 -1 .50117 0 433.924 430.664)" />
+</svg>

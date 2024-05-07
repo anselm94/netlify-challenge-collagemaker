@@ -3972,6 +3972,13 @@ figures@^5.0.0:
     escape-string-regexp "^5.0.0"
     is-unicode-supported "^1.2.0"
 
+file-selector@^0.6.0:
+  version "0.6.0"
+  resolved "https://registry.yarnpkg.com/file-selector/-/file-selector-0.6.0.tgz#fa0a8d9007b829504db4d07dd4de0310b65287dc"
+  integrity sha512-QlZ5yJC0VxHxQQsQhXvBaC7VRJ2uaxTf+Tfpu4Z/OcVQJVpZO+DGU0rkoVW5ce2SccxugvpBJoMvUs59iILYdw==
+  dependencies:
+    tslib "^2.4.0"
+
 file-type@^18.5.0:
   version "18.7.0"
   resolved "https://registry.yarnpkg.com/file-type/-/file-type-18.7.0.tgz#cddb16f184d6b94106cfc4bb56978726b25cb2a2"
@@ -4062,13 +4069,10 @@ find-up@6.3.0, find-up@^6.0.0, find-up@^6.3.0:
     locate-path "^7.1.0"
     path-exists "^5.0.0"
 
-flowbite-svelte-icons@^2.0.0-next.7:
-  version "2.0.0-next.7"
-  resolved "https://registry.yarnpkg.com/flowbite-svelte-icons/-/flowbite-svelte-icons-2.0.0-next.7.tgz#68e082778add80bb6eb56ad42410f5bcd1fb771a"
-  integrity sha512-gN4cU1A8ZfCue8r74V/WDGchvN0s4q3GWE/1xlx7vi6H6wVuXFqMClMKw8oCQhV/7HhtRMAwv03GnL2Lr/zCSg==
-  dependencies:
-    tailwind-merge "^2.3.0"
-    tailwindcss "^3.4.3"
+flowbite-svelte-icons@^1.6.0:
+  version "1.6.0"
+  resolved "https://registry.yarnpkg.com/flowbite-svelte-icons/-/flowbite-svelte-icons-1.6.0.tgz#c88a8af200cce6ff214055bba6a26e06f4a3a32b"
+  integrity sha512-GSd48qwyQUtq9E5oSVYAMGnu4GWuLQmLi+QcDU/QPX1TGGnRqon5oOsmPRRhC6cR6bdm+ampUGMKA1vOjf7wxw==
 
 flowbite-svelte@^0.46.1:
   version "0.46.1"
@@ -8025,6 +8029,13 @@ svelte-check@^3.6.0:
     svelte-preprocess "^5.1.3"
     typescript "^5.0.3"
 
+svelte-file-dropzone@^2.0.7:
+  version "2.0.7"
+  resolved "https://registry.yarnpkg.com/svelte-file-dropzone/-/svelte-file-dropzone-2.0.7.tgz#eff5d9c020e9c7e4aeb51a05a48a7920ed6a05a7"
+  integrity sha512-sykRq+Q8rXM9yqsD3T9yzb3syLe21Go01cxb5NTfKA9RgMWHT/gnjS8g36YFWw3jIdC7vbbmuwwgYdA0mlcMqw==
+  dependencies:
+    file-selector "^0.6.0"
+
 svelte-hmr@^0.16.0:
   version "0.16.0"
   resolved "https://registry.yarnpkg.com/svelte-hmr/-/svelte-hmr-0.16.0.tgz#9f345b7d1c1662f1613747ed7e82507e376c1716"
@@ -8153,7 +8164,7 @@ tailwind-merge@^2.3.0:
   dependencies:
     "@babel/runtime" "^7.24.1"
 
-tailwindcss@^3.4.1, tailwindcss@^3.4.3:
+tailwindcss@^3.4.1:
   version "3.4.3"
   resolved "https://registry.yarnpkg.com/tailwindcss/-/tailwindcss-3.4.3.tgz#be48f5283df77dfced705451319a5dffb8621519"
   integrity sha512-U7sxQk/n397Bmx4JHbJx/iSOOv5G+II3f1kpLpY2QeUv5DcPdcTsYLlusZfq1NthHS1c1cZoyFmmkex1rzke0A==
@@ -8465,7 +8476,7 @@ tslib@^1.8.1, tslib@^1.9.0:
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-1.14.1.tgz#cf2d38bdc34a134bcaf1091c41f6619e2f672d00"
   integrity sha512-Xni35NKzjgMrwevysHTCArtLDpPvye8zV/0E4EyYn43P7/7qvQwPh9BGkHewbMulVntbigmcT7rdX3BNo9wRJg==
 
-tslib@^2.4.1:
+tslib@^2.4.0, tslib@^2.4.1:
   version "2.6.2"
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.6.2.tgz#703ac29425e7b37cd6fd456e92404d46d1f3e4ae"
   integrity sha512-AEYxH93jGFPn/a2iVAwW87VuUIkR1FVUKB77NwMF7nBTDkDrrT/Hpt/IrCJ0QXhW27jTBDcf5ZY7w6RiqTMw2Q==
