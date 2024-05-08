@@ -1,64 +1,29 @@
 <script>
-	import CollageGrid from '$lib/components/CollageGrid.svelte';
-	import IconGrid2 from '$lib/images/grid-2.svg';
-	import IconGrid3 from '$lib/images/grid-3.svg';
-	import IconGrid4 from '$lib/images/grid-4.svg';
-	import IconGrid5 from '$lib/images/grid-5.svg';
-	import IconGrid6 from '$lib/images/grid-6.svg';
-	import IconGrid7 from '$lib/images/grid-7.svg';
-	import IconGrid8 from '$lib/images/grid-8.svg';
-	import { Button, Heading } from 'flowbite-svelte';
-
-	let LAYOUT_STYLES = [
-		{ value: 'grid-2', name: '2 image grid', icon: IconGrid2 },
-		{ value: 'grid-3', name: '3 image grid', icon: IconGrid3 },
-		{ value: 'grid-4', name: '4 image grid', icon: IconGrid4 },
-		{ value: 'grid-5', name: '5 image grid', icon: IconGrid5 },
-		{ value: 'grid-6', name: '6 image grid', icon: IconGrid6 },
-		{ value: 'grid-7', name: '7 image grid', icon: IconGrid7 },
-		{ value: 'grid-8', name: '8 image grid', icon: IconGrid8 }
-	];
-	let selectedLayout = 'grid-2';
+	import { Button, Heading, Img } from 'flowbite-svelte';
+	import ImgHero from '$lib/images/hero.png';
 </script>
 
-<div class="flex h-full flex-col md:flex-row">
-	<div class="flex flex-col border-2 border-black md:flex-1 dark:border-white">
-		<div class="flex flex-row-reverse px-4 py-4">
-			<Button size="md" class="ml-4 rounded-none bg-black text-white dark:bg-white dark:text-black"
-				>Download</Button
-			>
-		</div>
-		<div class="flex flex-1 items-center justify-center">
-			<CollageGrid style={selectedLayout} />
-		</div>
-	</div>
-
-	<div class="w-full py-2 md:w-64 md:pl-4 lg:w-96">
-		<div
-			class="flex h-full w-full flex-col border-2 border-black bg-white dark:border-white dark:bg-black"
+<div
+	class="mx-2 mb-4 flex flex-col-reverse border-2 border-black sm:mx-auto md:flex-row dark:border-white"
+>
+	<div class="flex flex-1 flex-col items-start justify-center px-8 py-4">
+		<Heading
+			tag="h2"
+			class="my-4 font-black leading-relaxed text-red-600 dark:text-red-700"
+			customSize="text-3xl">Effortlessly Craft Stunning Photo Collages in Seconds</Heading
 		>
-			<Heading
-				class="bg-black px-6 py-6 font-bold text-white dark:bg-white dark:text-black"
-				tag="h1"
-				customSize="text-sm">LAYOUT</Heading
-			>
-			<div
-				class="grid grid-cols-3 gap-4 px-6 py-6 pb-4 md:grid-cols-6 lg:grid-cols-10 xl:grid-cols-3"
-			>
-				{#each LAYOUT_STYLES as layout}
-					<label class="hidden" for={layout.value}>{layout.name}</label>
-					<input
-						class="h-20 w-20 cursor-pointer !rounded-none !border-2 !border-black bg-contain bg-origin-content checked:bg-contain checked:ring-2 checked:ring-black xl:h-16 xl:w-16 2xl:h-24 2xl:w-24 dark:!border-white"
-						type="radio"
-						id={layout.value}
-						name="layout-style"
-						bind:group={selectedLayout}
-						value={layout.value}
-						style="background-image: url('{layout.icon}');"
-						checked={layout.value === selectedLayout}
-					/>
-				{/each}
-			</div>
-		</div>
+		<Heading
+			tag="h1"
+			class="my-4 font-black leading-tight text-black dark:text-white"
+			customSize="text-8xl">Unleash Your Creativity with Our Photo Collage Maker</Heading
+		>
+		<Button
+			size="sm"
+			class="my-4 rounded-none bg-red-600 hover:bg-red-700 dark:bg-red-700 hover:dark:bg-red-600"
+			>Start Creating Now</Button
+		>
+	</div>
+	<div class="flex-1">
+		<Img imgClass="p-12" src={ImgHero} alt="Cover image" />
 	</div>
 </div>

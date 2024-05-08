@@ -6,7 +6,9 @@ export default {
 	],
 	darkMode: 'class',
 	theme: {
-		extend: {}
+		fontFamily: {
+			sans: ['Roboto', 'ui-sans-serif', 'system-ui']
+		}
 	},
 	plugins: [require('@tailwindcss/typography'), require('flowbite/plugin')],
 	safelist: [
