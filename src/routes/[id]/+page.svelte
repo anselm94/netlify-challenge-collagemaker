@@ -27,7 +27,7 @@
 
 <div class="flex h-full flex-col py-4 md:flex-row">
 	<div class="flex flex-col border-2 border-black px-4 py-4 dark:border-white md:flex-1">
-		<div class="flex flex-row-reverse">
+		<div class="flex flex-row-reverse pb-4">
 			<Button
 				size="md"
 				class="ml-4 rounded-none bg-black font-medium text-white dark:bg-white dark:text-black"
@@ -60,22 +60,24 @@
 					}}
 			>
 				<div
-					class="grid grid-cols-3 gap-4 px-6 py-6 pb-4 md:grid-cols-6 lg:grid-cols-10 xl:grid-cols-3"
+					class="grid aspect-square grid-cols-3 gap-4 px-6 py-6 pb-4 md:grid-cols-6 lg:grid-cols-10 xl:grid-cols-3"
 				>
 					{#each LAYOUT_STYLES as layout}
-						<label class="hidden" for={layout.value}>{layout.name}</label>
-						<input
-							class="h-20 w-20 cursor-pointer !rounded-none !border-2 !border-black bg-contain bg-origin-content checked:bg-contain checked:ring-2 checked:ring-black dark:!border-white xl:h-16 xl:w-16 2xl:h-24 2xl:w-24"
-							type="radio"
-							id={layout.value}
-							name="layout-style"
-							value={layout.value}
-							style="background-image: url('{layout.icon}');"
-							checked={layout.value === selectedLayout}
-						/>
+						<div>
+							<label class="hidden" for={layout.value}>{layout.name}</label>
+							<input
+								class="inline-block !w-full !h-full cursor-pointer !rounded-none !border-2 !border-black bg-contain bg-origin-content checked:bg-contain checked:ring-2 checked:ring-black dark:!border-white"
+								type="radio"
+								id={layout.value}
+								name="layout-style"
+								value={layout.value}
+								style="background-image: url('{layout.icon}');"
+								checked={layout.value === selectedLayout}
+							/>
+						</div>
 					{/each}
 				</div>
-				<div class="flex flex-row-reverse pe-4">
+				<div class="flex flex-row-reverse pe-4 pb-4">
 					<Button
 						size="sm"
 						class="ml-4 rounded-none bg-black text-sm font-medium text-white dark:bg-white dark:text-black"
