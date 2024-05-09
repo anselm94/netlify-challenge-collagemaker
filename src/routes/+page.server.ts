@@ -11,10 +11,11 @@ export const actions = {
 		const store = getStore('photogrid');
 
 		const galleryMetadata: GalleryMetadata = {
+			id: galleryId,
 			layout: 'grid-2',
-			gallery: []
+			images: new Array(8).fill(null) // create placeholders for upto 8 images
 		};
-		await store.setJSON(`${galleryId}#metadata`, galleryMetadata);
+		await store.setJSON(`${galleryId}|metadata`, galleryMetadata);
 
 		redirect(302, `/${galleryId}`);
 	}

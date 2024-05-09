@@ -8,22 +8,51 @@
 	import IconGrid6 from '$lib/images/grid-6.svg';
 	import IconGrid7 from '$lib/images/grid-7.svg';
 	import IconGrid8 from '$lib/images/grid-8.svg';
-	import { Button, Heading } from 'flowbite-svelte';
+	import { Button, Heading, Popover } from 'flowbite-svelte';
+	import { TrashBinOutline, UsersGroupOutline, BadgeCheckOutline } from 'flowbite-svelte-icons';
 	import type { PageData } from './$types';
+	import { invalidateAll } from '$app/navigation';
 
 	export let data: PageData;
 	let photogridGrid: PhotoGrid;
 
 	let LAYOUT_STYLES = [
-		{ value: 'grid-2', name: '2 image grid', icon: IconGrid2 },
-		{ value: 'grid-3', name: '3 image grid', icon: IconGrid3 },
-		{ value: 'grid-4', name: '4 image grid', icon: IconGrid4 },
-		{ value: 'grid-5', name: '5 image grid', icon: IconGrid5 },
-		{ value: 'grid-6', name: '6 image grid', icon: IconGrid6 },
-		{ value: 'grid-7', name: '7 image grid', icon: IconGrid7 },
-		{ value: 'grid-8', name: '8 image grid', icon: IconGrid8 }
+		{ value: 'grid-2', imageCount: 2, name: '2 image grid', icon: IconGrid2 },
+		{ value: 'grid-3', imageCount: 3, name: '3 image grid', icon: IconGrid3 },
+		{ value: 'grid-4', imageCount: 4, name: '4 image grid', icon: IconGrid4 },
+		{ value: 'grid-5', imageCount: 5, name: '5 image grid', icon: IconGrid5 },
+		{ value: 'grid-6', imageCount: 6, name: '6 image grid', icon: IconGrid6 },
+		{ value: 'grid-7', imageCount: 7, name: '7 image grid', icon: IconGrid7 },
+		{ value: 'grid-8', imageCount: 8, name: '8 image grid', icon: IconGrid8 }
 	];
-	let selectedLayout = data.layoutStyle;
+	$: selectedLayout = data.layout;
+	let gridBusy = false;
+	$: images = data.images.map((i) => (i ? `/${data.id}/image/${i}` : null));
+	$: downloadEnabled = LAYOUT_STYLES.find((l) => l.value === selectedLayout)?.imageCount === images.filter(i => i !== null).length;
+
+	async function onImageUpload(imageId: string, imageFile: File) {
+		gridBusy = true;
+		await fetch(`/${data.id}/image/${imageId}`, {
+			method: 'PUT',
+			body: imageFile
+		});
+		await invalidateAll();
+		gridBusy = false;
+	}
+
+	async function onImageDelete(imageId: string) {
+		gridBusy = true;
+		await fetch(`/${data.id}/image/${imageId}`, {
+			method: 'DELETE'
+		});
+		await invalidateAll();
+		gridBusy = false;
+	}
+
+	function copyUrl() {
+		const url = window.location.origin + window.location.pathname;
+		navigator.clipboard.writeText(url);
+	}
 </script>
 
 <div class="flex h-full flex-col py-4 md:flex-row">
@@ -31,8 +60,24 @@
 		<div class="flex flex-row-reverse pb-4">
 			<Button
 				size="md"
-				class="ml-4 rounded-none bg-black font-medium text-white dark:bg-white dark:text-black"
-				on:click={() => photogridGrid.downloadAsPng()}>DOWNLOAD</Button
+				class="ml-4 rounded-none bg-black pl-3 pr-4 font-medium text-white dark:bg-white dark:text-black"
+				on:click={() => photogridGrid.downloadAsPng()}
+				disabled={!downloadEnabled}
+				><TrashBinOutline class="mr-2" />DOWNLOAD</Button
+			>
+			<Button
+				id="btn-collaborate"
+				size="md"
+				class="ml-4 rounded-none bg-black pl-3 pr-4 font-medium text-white dark:bg-white dark:text-black"
+				on:click={copyUrl}><UsersGroupOutline class="mr-2" />COLLABORATE</Button
+			>
+			<Popover
+				class="flex flex-row items-center rounded-none border-2 !border-green-900 bg-green-200 text-sm text-green-900 dark:!border-green-200 dark:bg-green-700 dark:text-green-100"
+				triggeredBy="#btn-collaborate"
+				placement="left"
+				trigger="click"
+				><span class="font-bold"><BadgeCheckOutline class="mr-2 inline" />Link Copied!</span> Share this
+				link with your friends to start collaborating</Popover
 			>
 		</div>
 		<div
@@ -45,7 +90,14 @@
 			>
 		</div>
 		<div class="flex flex-1 items-center justify-center">
-			<PhotoGrid bind:this={photogridGrid} style={selectedLayout} />
+			<PhotoGrid
+				bind:this={photogridGrid}
+				style={selectedLayout}
+				busy={gridBusy}
+				{images}
+				on:upload={(e) => onImageUpload(e.detail.id, e.detail.file)}
+				on:delete={(e) => onImageDelete(e.detail.id)}
+			/>
 		</div>
 	</div>
 

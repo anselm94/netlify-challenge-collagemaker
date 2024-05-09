@@ -7,14 +7,11 @@ export const load: PageServerLoad = async ({ params }) => {
 
 	const store = getStore('photogrid');
 
-	const galleryMetadata: GalleryMetadata = await store.get(`${galleryId}#metadata`, {
+	const galleryMetadata: GalleryMetadata = await store.get(`${galleryId}|metadata`, {
 		type: 'json'
 	});
 
-	return {
-		layoutStyle: galleryMetadata.layout,
-		gallery: galleryMetadata.gallery
-	};
+	return galleryMetadata;
 };
 
 export const actions = {
@@ -23,12 +20,12 @@ export const actions = {
 		const formData = await request.formData();
 
 		const store = getStore('photogrid');
-		const galleryMetadata: GalleryMetadata = await store.get(`${params.id}#metadata`, {
+		const galleryMetadata: GalleryMetadata = await store.get(`${params.id}|metadata`, {
 			type: 'json'
 		});
 
 		galleryMetadata.layout = formData.get('layout-style') as GalleryMetadata['layout'];
-		await store.setJSON(`${galleryId}#metadata`, galleryMetadata);
+		await store.setJSON(`${galleryId}|metadata`, galleryMetadata);
 
 		return galleryMetadata;
 	}
