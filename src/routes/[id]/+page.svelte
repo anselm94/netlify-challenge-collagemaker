@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
-	import CollageGrid from '$lib/components/CollageGrid.svelte';
+	import PhotoGrid from '$lib/components/PhotoGrid.svelte';
 	import IconGrid2 from '$lib/images/grid-2.svg';
 	import IconGrid3 from '$lib/images/grid-3.svg';
 	import IconGrid4 from '$lib/images/grid-4.svg';
@@ -12,6 +12,7 @@
 	import type { PageData } from './$types';
 
 	export let data: PageData;
+	let photogridGrid: PhotoGrid;
 
 	let LAYOUT_STYLES = [
 		{ value: 'grid-2', name: '2 image grid', icon: IconGrid2 },
@@ -31,11 +32,20 @@
 			<Button
 				size="md"
 				class="ml-4 rounded-none bg-black font-medium text-white dark:bg-white dark:text-black"
-				>DOWNLOAD</Button
+				on:click={() => photogridGrid.downloadAsPng()}>DOWNLOAD</Button
+			>
+		</div>
+		<div
+			class="mb-4 border-2 border-orange-900 bg-orange-200 p-2 text-orange-900 dark:border-orange-50 dark:bg-orange-600 dark:text-orange-50"
+		>
+			<span class="pe-1 font-bold">INFO:</span>
+			<span
+				>Your last change was discarded since the Photogrid was updated by another person. The
+				latest changes are refreshed now</span
 			>
 		</div>
 		<div class="flex flex-1 items-center justify-center">
-			<CollageGrid style={selectedLayout} />
+			<PhotoGrid bind:this={photogridGrid} style={selectedLayout} />
 		</div>
 	</div>
 
@@ -66,7 +76,7 @@
 						<div>
 							<label class="hidden" for={layout.value}>{layout.name}</label>
 							<input
-								class="inline-block !w-full !h-full cursor-pointer !rounded-none !border-2 !border-black bg-contain bg-origin-content checked:bg-contain checked:ring-2 checked:ring-black dark:!border-white"
+								class="inline-block !h-full !w-full cursor-pointer !rounded-none !border-2 !border-black bg-contain bg-origin-content checked:bg-contain checked:ring-2 checked:ring-black dark:!border-white"
 								type="radio"
 								id={layout.value}
 								name="layout-style"
@@ -77,7 +87,7 @@
 						</div>
 					{/each}
 				</div>
-				<div class="flex flex-row-reverse pe-4 pb-4">
+				<div class="flex flex-row-reverse pb-4 pe-4">
 					<Button
 						size="sm"
 						class="ml-4 rounded-none bg-black text-sm font-medium text-white dark:bg-white dark:text-black"
