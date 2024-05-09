@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { enhance } from '$app/forms';
+	import { applyAction, enhance } from '$app/forms';
 	import PhotoGrid from '$lib/components/PhotoGrid.svelte';
 	import IconGrid2 from '$lib/images/grid-2.svg';
 	import IconGrid3 from '$lib/images/grid-3.svg';
@@ -10,10 +10,12 @@
 	import IconGrid8 from '$lib/images/grid-8.svg';
 	import { Button, Heading, Popover } from 'flowbite-svelte';
 	import { TrashBinOutline, UsersGroupOutline, BadgeCheckOutline } from 'flowbite-svelte-icons';
-	import type { PageData } from './$types';
+	import type { ActionData, PageData } from './$types';
 	import { invalidateAll } from '$app/navigation';
 
 	export let data: PageData;
+	export let form: ActionData;
+
 	let photogridGrid: PhotoGrid;
 
 	let LAYOUT_STYLES = [
@@ -27,24 +29,42 @@
 	];
 	$: selectedLayout = data.layout;
 	let gridBusy = false;
-	$: images = data.images.map((i) => (i ? `/${data.id}/image/${i}` : null));
-	$: downloadEnabled = LAYOUT_STYLES.find((l) => l.value === selectedLayout)?.imageCount === images.filter(i => i !== null).length;
+	$: images =
+		data.images?.map((i) => (i ? `/.netlify/images?url=/${data.id}/image/${i}` : null)) ?? [];
+	$: downloadEnabled =
+		LAYOUT_STYLES.find((l) => l.value === selectedLayout)?.imageCount ===
+		images.filter((i) => i !== null).length;
+	$: conflictUpdateOnLayoutSet = form?.updateConflict;
+	let conflictUpdateOnUpload = false;
+	let conflictUpdateOnDelete = false;
+	$: hadConflict = conflictUpdateOnLayoutSet || conflictUpdateOnUpload || conflictUpdateOnDelete;
+	$: lastModified = data.lastModified;
 
-	async function onImageUpload(imageId: string, imageFile: File) {
+	async function onImageUpload(imagePos: number, imageFile: File) {
 		gridBusy = true;
-		await fetch(`/${data.id}/image/${imageId}`, {
+		const res = await fetch(`/${data.id}/image/${imagePos}`, {
 			method: 'PUT',
-			body: imageFile
+			body: imageFile,
+			headers: {
+				'last-modified': `${lastModified}`
+			}
 		});
+		const { updateConflict }: { updateConflict: boolean } = await res.json();
+		conflictUpdateOnUpload = updateConflict;
 		await invalidateAll();
 		gridBusy = false;
 	}
 
-	async function onImageDelete(imageId: string) {
+	async function onImageDelete(imagePos: number) {
 		gridBusy = true;
-		await fetch(`/${data.id}/image/${imageId}`, {
-			method: 'DELETE'
+		const res = await fetch(`/${data.id}/image/${imagePos}`, {
+			method: 'DELETE',
+			headers: {
+				'last-modified': `${lastModified}`
+			}
 		});
+		const { updateConflict }: { updateConflict: boolean } = await res.json();
+		conflictUpdateOnDelete = updateConflict;
 		await invalidateAll();
 		gridBusy = false;
 	}
@@ -62,8 +82,7 @@
 				size="md"
 				class="ml-4 rounded-none bg-black pl-3 pr-4 font-medium text-white dark:bg-white dark:text-black"
 				on:click={() => photogridGrid.downloadAsPng()}
-				disabled={!downloadEnabled}
-				><TrashBinOutline class="mr-2" />DOWNLOAD</Button
+				disabled={!downloadEnabled}><TrashBinOutline class="mr-2" />DOWNLOAD</Button
 			>
 			<Button
 				id="btn-collaborate"
@@ -80,23 +99,25 @@
 				link with your friends to start collaborating</Popover
 			>
 		</div>
-		<div
-			class="mb-4 border-2 border-orange-900 bg-orange-200 p-2 text-orange-900 dark:border-orange-50 dark:bg-orange-600 dark:text-orange-50"
-		>
-			<span class="pe-1 font-bold">INFO:</span>
-			<span
-				>Your last change was discarded since the Photogrid was updated by another person. The
-				latest changes are refreshed now</span
+		{#if hadConflict}
+			<div
+				class="mb-4 border-2 border-orange-900 bg-orange-200 p-2 text-orange-900 dark:border-orange-50 dark:bg-orange-600 dark:text-orange-50"
 			>
-		</div>
+				<span class="pe-1 font-bold">INFO:</span>
+				<span
+					>Your change was discarded since the Photogrid was updated by another person. The latest
+					changes are refreshed now</span
+				>
+			</div>
+		{/if}
 		<div class="flex flex-1 items-center justify-center">
 			<PhotoGrid
 				bind:this={photogridGrid}
 				style={selectedLayout}
 				busy={gridBusy}
 				{images}
-				on:upload={(e) => onImageUpload(e.detail.id, e.detail.file)}
-				on:delete={(e) => onImageDelete(e.detail.id)}
+				on:upload={(e) => onImageUpload(e.detail.position, e.detail.file)}
+				on:delete={(e) => onImageDelete(e.detail.position)}
 			/>
 		</div>
 	</div>
@@ -114,13 +135,20 @@
 				method="post"
 				action="?/set-layout"
 				use:enhance={() =>
-					({ result }) => {
+					async ({ result }) => {
 						if (result.type === 'success') {
 							// @ts-ignore
-							selectedLayout = result.data?.layout;
+							data = result.data;
+							// @ts-ignore
+							conflictUpdateOnLayoutSet = result.data.updateConflict;
+						} else {
+							// may be the gallery is updated by someone else
+							await applyAction(result); // apply the result first
+							await invalidateAll(); // but reload the data to load what the user has uploaded
 						}
 					}}
 			>
+				<input hidden value={lastModified} name="last-modified" />
 				<div
 					class="grid aspect-square grid-cols-3 gap-4 px-6 py-6 pb-4 md:grid-cols-6 lg:grid-cols-10 xl:grid-cols-3"
 				>

@@ -12,6 +12,7 @@ export const actions = {
 
 		const galleryMetadata: GalleryMetadata = {
 			id: galleryId,
+			lastModified: Date.now(),
 			layout: 'grid-2',
 			images: new Array(8).fill(null) // create placeholders for upto 8 images
 		};

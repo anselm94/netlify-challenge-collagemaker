@@ -7,6 +7,7 @@
 	import { toPng } from 'html-to-image';
 	import { createEventDispatcher } from 'svelte';
 	import Dropzone from 'svelte-file-dropzone';
+	import { generate } from 'xksuid';
 
 	export let mode: 'EDIT' | 'VIEW' = 'EDIT';
 	export let style = 'grid-8';
@@ -51,7 +52,7 @@
 							<Button
 								class="absolute bottom-2 right-2 aspect-square w-8 rounded-none border-2 border-white bg-black p-0 hover:bg-gray-800 dark:border-black dark:bg-white hover:dark:bg-gray-200"
 								aria-label="Delete"
-								on:click={() => dispatch('delete', { id: i })}
+								on:click={() => dispatch('delete', { position: i })}
 								><TrashBinOutline class="h-4 w-4 text-white dark:text-black" /></Button
 							>
 						{/if}
@@ -69,7 +70,7 @@
 								alert(e.detail.fileRejections[0]?.errors[0]?.message);
 							} else {
 								dispatch('upload', {
-									id: i,
+									position: i,
 									file: e.detail.acceptedFiles[0]
 								});
 							}
