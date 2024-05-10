@@ -7,7 +7,7 @@ export const POST: APIRoute = async ({ params, request }) => {
   const { selectedLayout } = await request.json();
 
   const store = getStore("photogrid");
-  const gridMetadata: GridMetadata = await store.get(`${gridId}|metadata`, {
+  const gridMetadata: GridMetadata = await store.get(`${gridId}/metadata`, {
     type: "json",
   });
 
@@ -25,7 +25,7 @@ export const POST: APIRoute = async ({ params, request }) => {
 
   gridMetadata.layout = selectedLayout;
   gridMetadata.lastModified = Date.now();
-  await store.setJSON(`${gridId}|metadata`, gridMetadata);
+  await store.setJSON(`${gridId}/metadata`, gridMetadata);
 
   return new Response(JSON.stringify(gridMetadata), {
     status: 200,

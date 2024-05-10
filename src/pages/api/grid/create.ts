@@ -14,7 +14,7 @@ export const POST: APIRoute = async ({ redirect }) => {
     layout: "grid-2",
     images: new Array(8).fill(null), // create placeholders for upto 8 images
   };
-  await store.setJSON(`${gridId}|metadata`, gridMetadata);
+  await store.setJSON(`${gridId}/metadata`, gridMetadata);
 
   return redirect(`/${gridId}`, 307);
 };

@@ -9,7 +9,7 @@ export const GET: APIRoute = async ({ params }) => {
 
   const store = getStore("photogrid");
 
-  const image = await store.get(`${gridId}|image-${imageId}`, {
+  const image = await store.get(`${gridId}/image-${imageId}`, {
     type: "stream", // use 'stream' to avoid loading images into memory
   });
 
@@ -34,7 +34,7 @@ export const PUT: APIRoute = async ({ params, request }) => {
   const image = await request.blob();
 
   const store = getStore("photogrid");
-  const gridMetadata: GridMetadata = await store.get(`${gridId}|metadata`, {
+  const gridMetadata: GridMetadata = await store.get(`${gridId}/metadata`, {
     type: "json",
   });
 
@@ -52,12 +52,12 @@ export const PUT: APIRoute = async ({ params, request }) => {
 
   // upload the image
   const imageId = generate();
-  await store.set(`${gridId}|image-${imageId}`, image);
+  await store.set(`${gridId}/image-${imageId}`, image);
 
   // update the grid metadata
   gridMetadata.images[imagePos] = imageId;
   gridMetadata.lastModified = Date.now();
-  await store.setJSON(`${gridId}|metadata`, gridMetadata);
+  await store.setJSON(`${gridId}/metadata`, gridMetadata);
 
   return new Response(JSON.stringify(gridMetadata), {
     status: 200,
@@ -72,7 +72,7 @@ export const DELETE: APIRoute = async ({ request, params }) => {
   const imagePos = parseInt(params.imageId ?? "0");
 
   const store = getStore("photogrid");
-  const gridMetadata: GridMetadata = await store.get(`${gridId}|metadata`, {
+  const gridMetadata: GridMetadata = await store.get(`${gridId}/metadata`, {
     type: "json",
   });
 
@@ -90,12 +90,12 @@ export const DELETE: APIRoute = async ({ request, params }) => {
 
   // delete the image
   const imageId = gridMetadata.images[imagePos];
-  await store.delete(`${gridId}|image-${imageId}`);
+  await store.delete(`${gridId}/image-${imageId}`);
 
   // update the grid metadata
   gridMetadata.images[imagePos] = null;
   gridMetadata.lastModified = Date.now();
-  await store.setJSON(`${gridId}|metadata`, gridMetadata);
+  await store.setJSON(`${gridId}/metadata`, gridMetadata);
 
   return new Response(JSON.stringify(gridMetadata), {
     status: 200,
