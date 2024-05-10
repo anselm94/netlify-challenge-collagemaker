@@ -3,7 +3,7 @@ import { getStore } from '@netlify/blobs';
 import { fail } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
 
-export const load: PageServerLoad = async ({ request, params }) => {
+export const load: PageServerLoad = async ({ params }) => {
 	const galleryId = params.id;
 
 	const store = getStore('photogrid');

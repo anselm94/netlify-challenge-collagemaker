@@ -4,7 +4,7 @@ import { error, json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import { generate } from 'xksuid';
 
-export const GET: RequestHandler = async ({ params }) => {
+export const GET: RequestHandler = async ({ params, setHeaders }) => {
 	const galleryId = params.id;
 	const imageId = params.image;
 
@@ -17,6 +17,10 @@ export const GET: RequestHandler = async ({ params }) => {
 	if (!image) {
 		throw error(404, 'Not found');
 	}
+
+	setHeaders({
+		'cache-control': 'public, max-age=0, s-maxage=86400, must-revalidate' // cache for 24 hours since every uploaded image has new id
+	});
 
 	return new Response(image, {
 		status: 200
