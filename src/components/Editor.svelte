@@ -29,13 +29,17 @@
     LAYOUT_STYLES.find((l) => l.value === selectedLayout)?.imageCount ===
     images.filter((i) => i !== null).length;
 
-  $: onImageUpload = async (imagePos: number, imageFile: File) => {
+  $: onImageUpload = async (
+    imagePos: number,
+    imageFile: File,
+    lastModified: number
+  ) => {
     gridBusy = true;
     const res = await fetch(`/api/grid/${gridMetadata.id}/image/${imagePos}`, {
       method: "PUT",
       body: imageFile,
       headers: {
-        "last-modified": `${gridMetadata.lastModified}`,
+        "last-modified": `${lastModified}`,
       },
     });
     hasConflict = res.status == 412;
@@ -43,12 +47,12 @@
     gridBusy = false;
   };
 
-  $: onImageDelete = async (imagePos: number) => {
+  $: onImageDelete = async (imagePos: number, lastModified: number) => {
     gridBusy = true;
     const res = await fetch(`/api/grid/${gridMetadata.id}/image/${imagePos}`, {
       method: "DELETE",
       headers: {
-        "last-modified": `${gridMetadata.lastModified}`,
+        "last-modified": `${lastModified}`,
       },
     });
     hasConflict = res.status == 412;
@@ -56,7 +60,7 @@
     gridBusy = false;
   };
 
-  $: onLayoutSelect = async (selectedLayout: string) => {
+  $: onLayoutSelect = async (selectedLayout: string, lastModified: number) => {
     gridBusy = true;
     const res = await fetch(`/api/grid/${gridMetadata.id}/set-layout`, {
       method: "POST",
@@ -64,7 +68,7 @@
         selectedLayout: selectedLayout,
       }),
       headers: {
-        "last-modified": `${gridMetadata.lastModified}`,
+        "last-modified": `${lastModified}`,
       },
     });
     hasConflict = res.status == 412;
@@ -126,8 +130,14 @@
         selectedLayout={gridMetadata.layout}
         busy={gridBusy}
         {images}
-        on:upload={(e) => onImageUpload(e.detail.position, e.detail.file)}
-        on:delete={(e) => onImageDelete(e.detail.position)}
+        on:upload={(e) =>
+          onImageUpload(
+            e.detail.position,
+            e.detail.file,
+            gridMetadata.lastModified
+          )}
+        on:delete={(e) =>
+          onImageDelete(e.detail.position, gridMetadata.lastModified)}
       />
     </div>
   </div>
@@ -143,12 +153,13 @@
       >
       <form
         action="POST"
-        on:submit|preventDefault={(e) => onLayoutSelect(selectedLayout)}
+        on:submit|preventDefault={(e) =>
+          onLayoutSelect(selectedLayout, gridMetadata.lastModified)}
       >
         <div
           class="grid aspect-square grid-cols-3 gap-4 px-6 py-6 pb-4 md:grid-cols-6 lg:grid-cols-10 xl:grid-cols-3"
         >
-          {#each LAYOUT_STYLES as layout}
+          {#each LAYOUT_STYLES as layout (layout.value)}
             <div>
               <label class="hidden" for={layout.value}>{layout.name}</label>
               <input
