@@ -1,5 +1,5 @@
 ---
-import { Navbar, NavBrand, DarkMode, Button } from "flowbite-svelte";
+import { Button, NavBrand, Navbar } from "flowbite-svelte";
 import NavContainer from "flowbite-svelte/NavContainer.svelte";
 import Logo from "../components/Logo.svelte";
 import BaseLayout from "./BaseLayout.astro";
@@ -13,6 +13,7 @@ const { title } = Astro.props;
 
 <BaseLayout title={title}>
   <Navbar class="w-full bg-white font-sans dark:bg-black">
+    <!-- @ts-ignore -->
     <NavContainer class="border-2 border-black px-5 py-2 dark:border-white">
       <NavBrand href="/">
         <Logo />

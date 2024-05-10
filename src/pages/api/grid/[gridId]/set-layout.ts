@@ -2,7 +2,7 @@ import { getStore } from "@netlify/blobs";
 import type { APIRoute } from "astro";
 import type { GridMetadata } from "../../../../lib/types";
 
-export const POST: APIRoute = async ({ params, rewrite, request }) => {
+export const POST: APIRoute = async ({ params, request }) => {
   const gridId = params.gridId;
   const { selectedLayout } = await request.json();
 
