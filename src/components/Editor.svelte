@@ -29,7 +29,7 @@
     LAYOUT_STYLES.find((l) => l.value === selectedLayout)?.imageCount ===
     images.filter((i) => i !== null).length;
 
-  async function onImageUpload(imagePos: number, imageFile: File) {
+  $: onImageUpload = async (imagePos: number, imageFile: File) => {
     gridBusy = true;
     const res = await fetch(`/api/grid/${gridMetadata.id}/image/${imagePos}`, {
       method: "PUT",
@@ -41,9 +41,9 @@
     hasConflict = res.status == 412;
     gridMetadata = await res.json();
     gridBusy = false;
-  }
+  };
 
-  async function onImageDelete(imagePos: number) {
+  $: onImageDelete = async (imagePos: number) => {
     gridBusy = true;
     const res = await fetch(`/api/grid/${gridMetadata.id}/image/${imagePos}`, {
       method: "DELETE",
@@ -54,9 +54,9 @@
     hasConflict = res.status == 412;
     gridMetadata = await res.json();
     gridBusy = false;
-  }
+  };
 
-  async function onLayoutSelect(selectedLayout: string) {
+  $: onLayoutSelect = async (selectedLayout: string) => {
     gridBusy = true;
     const res = await fetch(`/api/grid/${gridMetadata.id}/set-layout`, {
       method: "POST",
@@ -70,12 +70,12 @@
     hasConflict = res.status == 412;
     gridMetadata = await res.json();
     gridBusy = false;
-  }
+  };
 
-  function copyUrl() {
+  const copyUrl = () => {
     const url = window.location.origin + window.location.pathname;
     navigator.clipboard.writeText(url);
-  }
+  };
 </script>
 
 <div class="flex h-full flex-col py-4 md:flex-row">
@@ -85,7 +85,9 @@
     <div class="flex flex-row-reverse pb-4">
       <Button
         size="md"
-        class="flex flex-row ml-4 rounded-none bg-black pl-3 pr-4 font-medium text-white dark:bg-white dark:text-black"
+        class="{!downloadEnabled
+          ? 'bg-gray-600'
+          : 'bg-black'} flex flex-row ml-4 rounded-none pl-3 pr-4 font-medium text-white dark:bg-white dark:text-black"
         on:click={() => photogridGrid.downloadAsPng()}
         disabled={!downloadEnabled}
         ><TrashBinOutline class="h-6 w-6 mr-2" />DOWNLOAD</Button

@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { LAYOUTS } from "../lib/utils";
   import { Image } from "@unpic/svelte";
   import download from "downloadjs";
   import { Button, Spinner } from "flowbite-svelte";
@@ -7,7 +6,7 @@
   import { toPng } from "html-to-image";
   import { createEventDispatcher } from "svelte";
   import Dropzone from "svelte-file-dropzone";
-  import { generate } from "xksuid";
+  import { LAYOUTS } from "../lib/utils";
 
   export let mode: "EDIT" | "VIEW" = "EDIT";
   export let selectedLayout = "grid-8";
@@ -35,7 +34,7 @@
     <div
       class="col-span-8 row-span-8 flex flex-col items-center justify-center"
     >
-      <Spinner color="white" />
+      <Spinner class="w-24 h-24 aspect-square" color="red" />
     </div>
   {:else}
     {#each currentLayout.cells as cell, i (i)}

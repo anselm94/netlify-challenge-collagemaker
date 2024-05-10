@@ -54,7 +54,7 @@ export const PUT: APIRoute = async ({ params, request }) => {
   const imageId = generate();
   await store.set(`${gridId}|image-${imageId}`, image);
 
-  // update the gallery metadata
+  // update the grid metadata
   gridMetadata.images[imagePos] = imageId;
   gridMetadata.lastModified = Date.now();
   await store.setJSON(`${gridId}|metadata`, gridMetadata);
@@ -92,7 +92,7 @@ export const DELETE: APIRoute = async ({ request, params }) => {
   const imageId = gridMetadata.images[imagePos];
   await store.delete(`${gridId}|image-${imageId}`);
 
-  // update the gallery metadata
+  // update the grid metadata
   gridMetadata.images[imagePos] = null;
   gridMetadata.lastModified = Date.now();
   await store.setJSON(`${gridId}|metadata`, gridMetadata);
