@@ -1,0 +1,40 @@
+---
+import { Navbar, NavBrand, DarkMode, Button } from "flowbite-svelte";
+import NavContainer from "flowbite-svelte/NavContainer.svelte";
+import Logo from "../components/Logo.svelte";
+import BaseLayout from "./BaseLayout.astro";
+
+interface Props {
+  title: string;
+}
+
+const { title } = Astro.props;
+---
+
+<BaseLayout title={title}>
+  <Navbar class="w-full bg-white font-sans dark:bg-black">
+    <NavContainer class="border-2 border-black px-5 py-2 dark:border-white">
+      <NavBrand href="/">
+        <Logo />
+      </NavBrand>
+      <div class="flex md:order-2">
+        <!-- <DarkMode
+          btnClass="inline-block rounded-none px-2 bg-black dark:bg-white hover:bg-gray-800 dark:hover:bg-gray-200 text-white dark:text-black hover:text-white dark:hover:text-black border-2 border-black dark:border-white hidden md:block"
+        /> -->
+        <form method="POST" action="/api/grid/create">
+          <Button
+            size="sm"
+            class="ml-4 rounded-none font-medium bg-red-600 hover:bg-red-700 dark:bg-red-700 hover:dark:bg-red-600 px-4"
+            type="submit">CREATE A PHOTOGRID</Button
+          >
+        </form>
+      </div>
+    </NavContainer>
+  </Navbar>
+
+  <main class="h-full w-full bg-white font-sans dark:bg-black">
+    <div class="container mx-auto h-full w-full">
+      <slot />
+    </div>
+  </main>
+</BaseLayout>

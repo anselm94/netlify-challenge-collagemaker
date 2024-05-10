@@ -1,0 +1,41 @@
+---
+import { Image } from "astro:assets";
+import { Button, Heading } from "flowbite-svelte";
+import ImgHero from "../assets/hero.png";
+import Layout from "../layouts/Layout.astro";
+
+Astro.response.headers.set('cache-control', 'public, max-age=0, s-maxage=86400, must-revalidate');
+---
+
+<Layout title="Home">
+  <main>
+    <div
+      class="mx-2 mb-4 flex flex-col-reverse border-2 border-black dark:border-white sm:mx-auto md:flex-row"
+    >
+      <div class="flex flex-1 flex-col items-start justify-center px-8 py-4">
+        <Heading
+          tag="h2"
+          class="my-4 font-black leading-relaxed text-red-600 dark:text-red-700"
+          customSize="text-3xl"
+          >Effortlessly Craft Stunning Photo Collages in Seconds</Heading
+        >
+        <Heading
+          tag="h1"
+          class="my-4 font-black leading-tight text-black dark:text-white"
+          customSize="text-8xl"
+          >Unleash Your Creativity with Our Photo Collage Maker</Heading
+        >
+        <form method="POST" action="/api/grid/create">
+          <Button
+            size="sm"
+            class="my-4 rounded-none bg-red-600 hover:bg-red-700 dark:bg-red-700 hover:dark:bg-red-600"
+            type="submit">Start Creating Now</Button
+          >
+        </form>
+      </div>
+      <div class="flex-1">
+        <Image class="p-12" src={ImgHero} alt="Cover image" />
+      </div>
+    </div>
+  </main>
+</Layout>
