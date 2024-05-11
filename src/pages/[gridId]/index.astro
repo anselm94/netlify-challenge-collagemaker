@@ -39,9 +39,10 @@ if (gridMetadata === null) {
   });
 }
 
+Astro.response.headers.set("Netlify-Vary", "query=lastmodified|hasconflict"); // set caching key
 Astro.response.headers.set(
-  "cache-control",
-  "public, no-cache, must-revalidate" // do not cache, since any operation might change the photogrid. Haven't introduced a hash in query params, in such case, I could have used 'Netlify-Vary' header for even more finer control
+  "Netlify-CDN-Cache-Control",
+  "public, max-age=0, s-maxage=86400, must-revalidate" // cache for 24 hours in the cdn, but not in the browser. The cache object is selected based on 'lastmodified' and 'hasconflict' search params
 );
 ---
 

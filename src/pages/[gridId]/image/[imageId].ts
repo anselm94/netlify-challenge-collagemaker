@@ -25,7 +25,7 @@ export const GET: APIRoute = async ({ params }) => {
   return new Response(image, {
     status: 200,
     headers: {
-      "cache-control": "public, max-age=0, s-maxage=86400, must-revalidate", // cache for 24 hours since every uploaded image has new id
+      "Netlify-CDN-Cache-Control": "public, max-age=0, s-maxage=86400, must-revalidate", // cache for 24 hours since every uploaded image has new id
     },
   });
 };
