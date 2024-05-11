@@ -11,70 +11,21 @@
   let photogridGrid: PhotoGrid;
 
   export let gridMetadata: GridMetadata;
+  export let hasConflict = false;
   export let LAYOUT_STYLES: {
     value: string;
     imageCount: number;
     name: string;
     icon: string;
   }[] = [];
-  let gridBusy = false;
 
-  let hasConflict = false;
-  let selectedLayout = gridMetadata.layout;
-  $: images =
+  let images =
     gridMetadata.images?.map((i) =>
-      i ? `/.netlify/images?url=/api/grid/${gridMetadata.id}/image/${i}` : null
+      i ? `/.netlify/images?url=/${gridMetadata.id}/image/${i}` : null
     ) ?? [];
-  $: downloadEnabled =
-    LAYOUT_STYLES.find((l) => l.value === selectedLayout)?.imageCount ===
-    images.filter((i) => i !== null).length;
-
-  $: onImageUpload = async (
-    imagePos: number,
-    imageFile: File,
-    lastModified: number
-  ) => {
-    gridBusy = true;
-    const res = await fetch(`/api/grid/${gridMetadata.id}/image/${imagePos}`, {
-      method: "PUT",
-      body: imageFile,
-      headers: {
-        "last-modified": `${lastModified}`,
-      },
-    });
-    hasConflict = res.status == 412;
-    gridMetadata = await res.json();
-    gridBusy = false;
-  };
-
-  $: onImageDelete = async (imagePos: number, lastModified: number) => {
-    gridBusy = true;
-    const res = await fetch(`/api/grid/${gridMetadata.id}/image/${imagePos}`, {
-      method: "DELETE",
-      headers: {
-        "last-modified": `${lastModified}`,
-      },
-    });
-    hasConflict = res.status == 412;
-    gridMetadata = await res.json();
-    gridBusy = false;
-  };
-
-  $: onLayoutSelect = async (selectedLayout: string, lastModified: number) => {
-    gridBusy = true;
-    const res = await fetch(`/api/grid/${gridMetadata.id}/set-layout`, {
-      method: "POST",
-      body: JSON.stringify({
-        selectedLayout: selectedLayout,
-      }),
-      headers: {
-        "last-modified": `${lastModified}`,
-      },
-    });
-    hasConflict = res.status == 412;
-    gridMetadata = await res.json();
-    gridBusy = false;
-  };
+  let downloadEnabled =
+    (LAYOUT_STYLES.find((l) => l.value === gridMetadata.layout)?.imageCount ??
+      0) <= images.filter((i) => i !== null).length;
 
   const copyUrl = () => {
     const url = window.location.origin + window.location.pathname;
@@ -127,17 +78,11 @@
     <div class="flex flex-1 items-center justify-center">
       <PhotoGrid
         bind:this={photogridGrid}
+        gridId={gridMetadata.id}
+        lastModified={gridMetadata.lastModified}
         selectedLayout={gridMetadata.layout}
-        busy={gridBusy}
+        busy={false}
         {images}
-        on:upload={(e) =>
-          onImageUpload(
-            e.detail.position,
-            e.detail.file,
-            gridMetadata.lastModified
-          )}
-        on:delete={(e) =>
-          onImageDelete(e.detail.position, gridMetadata.lastModified)}
       />
     </div>
   </div>
@@ -152,9 +97,8 @@
         customSize="text-base">LAYOUT</Heading
       >
       <form
-        action="POST"
-        on:submit|preventDefault={(e) =>
-          onLayoutSelect(selectedLayout, gridMetadata.lastModified)}
+        method="POST"
+        action="/{gridMetadata.id}/set-layout?lastmodified={gridMetadata.lastModified}"
       >
         <div
           class="grid aspect-square grid-cols-3 gap-4 px-6 py-6 pb-4 md:grid-cols-6 lg:grid-cols-10 xl:grid-cols-3"
@@ -165,12 +109,11 @@
               <input
                 class="inline-block !h-full !w-full cursor-pointer !rounded-none !border-2 !border-black bg-contain bg-origin-content checked:bg-contain checked:ring-2 checked:ring-black dark:!border-white"
                 type="radio"
-                bind:group={selectedLayout}
                 id={layout.value}
                 name="layout-style"
                 value={layout.value}
                 style="background-image: url('{layout.icon}');"
-                checked={layout.value === selectedLayout}
+                checked={layout.value === gridMetadata.layout}
               />
             </div>
           {/each}

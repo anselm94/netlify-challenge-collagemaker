@@ -4,16 +4,16 @@
   import { Button, Spinner } from "flowbite-svelte";
   import { TrashBinOutline } from "flowbite-svelte-icons";
   import { toPng } from "html-to-image";
-  import { createEventDispatcher } from "svelte";
   import Dropzone from "svelte-file-dropzone";
   import { LAYOUTS } from "../lib/utils";
 
   export let mode: "EDIT" | "VIEW" = "EDIT";
+  export let gridId;
+  export let lastModified;
   export let selectedLayout = "grid-8";
   export let images: Array<string | null> = [];
   export let busy = false;
 
-  const dispatch = createEventDispatcher();
   let elGrid: HTMLDivElement;
   $: currentLayout = LAYOUTS[selectedLayout];
 
@@ -46,41 +46,54 @@
             <Image
               class="h-full w-full"
               src={images[i] ?? ""}
+              priority={true}
               layout="constrained"
               width={cell.width}
               height={cell.height}
               alt="A lovely bath"
             />
             {#if mode === "EDIT"}
-              <Button
-                class="absolute bottom-2 right-2 w-10 h-10 rounded-none border-2 border-white p-2 bg-black hover:bg-gray-800 dark:border-black dark:bg-white hover:dark:bg-gray-200"
-                aria-label="Delete"
-                on:click={() => dispatch("delete", { position: i })}
-                ><TrashBinOutline
-                  class="mx-auto h-4 w-4 text-white dark:text-black"
-                /></Button
+              <form
+                method="POST"
+                action={`/${gridId}/image/${i}?lastmodified=${lastModified}`}
               >
+                <input hidden name="operation" value="delete" />
+                <Button
+                  name="delete"
+                  class="absolute bottom-2 right-2 w-10 h-10 rounded-none border-2 border-white p-2 bg-black hover:bg-gray-800 dark:border-black dark:bg-white hover:dark:bg-gray-200"
+                  aria-label="Delete"
+                  type="submit"
+                  ><TrashBinOutline
+                    class="mx-auto h-4 w-4 text-white dark:text-black"
+                  /></Button
+                >
+              </form>
             {/if}
           </div>
         {:else}
-          <Dropzone
-            containerClasses="flex flex-col h-full items-center justify-center p-8 text-center text-gray-500 dark:text-gray-500 text-sm border-dashed border-2 border-gray-600 bg-gray-200 dark:bg-gray-800"
-            disableDefaultStyles
-            required
-            multiple={false}
-            maxSize={1_048_576}
-            accept="image/*"
-            on:drop={(e) => {
-              if (e.detail.fileRejections.length > 0) {
-                alert(e.detail.fileRejections[0]?.errors[0]?.message);
-              } else {
-                dispatch("upload", {
-                  position: i,
-                  file: e.detail.acceptedFiles[0],
-                });
-              }
-            }}
-          />
+          <form
+            id={`form-dropzone-${i}`}
+            class="h-full"
+            method="POST"
+            action={`/${gridId}/image/${i}?lastmodified=${lastModified}`}
+            enctype="multipart/form-data"
+          >
+            <input hidden name="operation" value="upload" />
+            <Dropzone
+              containerClasses="flex flex-col h-full items-center justify-center p-8 text-center text-gray-500 dark:text-gray-500 text-sm border-dashed border-2 border-gray-600 bg-gray-200 dark:bg-gray-800"
+              disableDefaultStyles
+              required
+              multiple={false}
+              maxSize={1_048_576}
+              accept="image/*"
+              name="image"
+              on:drop={(e) => {
+                let form = document.getElementById(`form-dropzone-${i}`);
+                // @ts-ignore
+                form.submit();
+              }}
+            />
+          </form>
         {/if}
       </div>
     {/each}
