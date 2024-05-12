@@ -50,7 +50,7 @@
               layout="constrained"
               width={cell.width}
               height={cell.height}
-              alt="A lovely bath"
+              alt="Photogrid image - {i}"
             />
             {#if mode === "EDIT"}
               <form
