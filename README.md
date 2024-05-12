@@ -2,6 +2,8 @@
 
 A collaborative PhotoGrid collage maker written in AstroJS, submitted for the [Dev.to Netlify Challenge](https://dev.to/challenges/netlify).
 
+**Blog Post** - https://dev.to/anselm94/collaborative-photogrid-collage-maker-built-on-netlify-primitives-gam
+
 ## Demo
 
 **Demo** - https://photogrider.netlify.app/
